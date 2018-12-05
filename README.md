@@ -120,6 +120,6 @@ const mapStoreToProps = (store: Store) => ({
     // string
     error: store.template.test.error
 });
+```
 
 Types of each of the attributes of the `SimpleReducer` is as defined in the reducer file `(SimpleReducer<number, string>)`.
-```
