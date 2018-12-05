@@ -2,8 +2,13 @@ import {ThunkAction, ThunkDispatch} from "redux-thunk";
 
 import {Store} from "..";
 
-import Actions from "./Actions";
+export type InitHandler = () => {
+    type: string;
+}
 
+export type ResetHandler = () => {
+    type: string;
+}
 
 export type SuccessHandler<S> = (data: S) => {
     type: string,
@@ -16,23 +21,17 @@ export type FailureHandler<F> = (data: F) => {
 }
 
 export interface ActionCreatorHandlers<S, F> {
-    init: () => { type: string },
+    init: InitHandler,
     success: SuccessHandler<S>,
     failure: FailureHandler<F>
+    reset: ResetHandler
 }
 
-export interface EVMLAction<S, F> {
+export interface CustomAction<S, F> {
     type: string,
     data?: S | F
 }
 
-export type EVMLDispatch<S, F> = ThunkDispatch<Store, any, EVMLAction<S, F>>;
-export type EVMLActionHandler<D, S, F, R> = (data?: D) => ThunkAction<R, Store, any, EVMLAction<S, F>>
-
-const getHandlers = <A extends Actions, S, F>(object: A, prefix: string): ActionCreatorHandlers<S, F> => ({
-    init: () => ({type: object.TYPES[`${prefix}_INIT`]}),
-    success: (data: S) => ({type: object.TYPES[`${prefix}_SUCCESS`], data}),
-    failure: (data: F) => ({type: object.TYPES[`${prefix}_FAILURE`], data}),
-});
-
-export default getHandlers
+export type CustomDispatch<S, F> = ThunkDispatch<Store, any, CustomAction<S, F>>;
+export type CustomThunkAction<S, F, R = Promise<S>> = ThunkAction<R, Store, any, CustomAction<S, F>>;
+export type CustomActionHandler<D, S, F, R> = (data?: D) => CustomThunkAction<S, F, R>;
