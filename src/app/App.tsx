@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import {withAlert} from "react-alert";
 import {connect} from "react-redux";
 
 import Index from "../pages/Index";
@@ -27,4 +28,4 @@ const mapStoreToProps = (store: Store) => ({});
 
 const mapsDispatchToProps = (dispatch: any) => ({});
 
-export default connect(mapStoreToProps, mapsDispatchToProps)(App);
+export default connect(mapStoreToProps, mapsDispatchToProps)(withAlert(App));

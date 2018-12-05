@@ -1,9 +1,11 @@
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
+import {InjectedAlertProp} from "react-alert";
 import {applyMiddleware, combineReducers, createStore} from "redux";
 
 export interface DefaultProps {
+    alert: InjectedAlertProp;
     [key: string]: any;
 }
 
