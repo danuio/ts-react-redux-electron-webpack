@@ -18,6 +18,9 @@ npm run start:electron
 
 Most actions in redux require you to `init` a process which will set an `isLoading` attribute of that `reducer` to `true`. Then it will follow with a `success` or `failure` and maybe even a `reset`. To incorporate this in, I have created a simple framework to quickly generate these action handlers and the underlying actions.
 
+### Action Classes
+These classes will handle all `redux-thunk` actions for every `reducer`.
+
 ```typescript
 import {CustomThunkAction} from "../common/Handlers";
 
@@ -62,4 +65,61 @@ class Template extends Actions {
     };
 
 }
+```
+
+### Reducer Classes
+The reducer logic for `SimpleActionHandlers`.
+
+```typescript
+import {combineReducers} from "redux";
+
+import BasicReducerFactory, {BasicReducerState} from "../common/BasicReducer";
+import Template from "../actions/Template";
+
+
+// defining typing for our TemplateReducer
+export interface TemplateReducerState {
+
+    // BasicReducer is a generic type which takes who arguments
+    // which are the type of the response of success and failure
+    test: BasicReducerState<number, string>;
+
+}
+
+// create a new Template action instance
+const template = new Template();
+
+// pre-filling the Actions class type before using it to make it easier
+const SimpleReducer = <T1, T2>(prefix: string, initial?: BasicReducerState<T1, T2>) => {
+    return BasicReducerFactory<Template, T1, T2>(template, prefix, initial);
+};
+
+// our TemplateReducer
+const TemplateReducer = combineReducers({
+
+    // SimpleReducer is predefined in 'common/Reducer.ts'
+    // this takes two arguments which again are the types of the success response
+    // and the types of failure response
+    test: SimpleReducer<number, string>('TEST')
+
+});
+
+export default TemplateReducer;
+```
+
+### Accessing Reducer States
+
+To access the state of a particular reducer, in our case the state of `TemplateReducer`, you have to specify it in the `mapStoreToProps` function of any component.
+
+```typescript
+const mapStoreToProps = (store: Store) => ({
+    // boolean
+    isLoading: store.template.test.isLoading
+    // number
+    response: store.template.test.response
+    // string
+    error: store.template.test.error
+});
+
+Types of each of the attributes of the `SimpleReducer` is as defined in the reducer file `(SimpleReducer<number, string>)`.
 ```
