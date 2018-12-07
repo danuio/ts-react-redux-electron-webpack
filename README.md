@@ -1,4 +1,4 @@
-# ts-react-redux-electron
+# ts-react-redux-electron-webpack
 Boilerplate for an Electron application written in Typescript with React.JS and Redux for state management. Also has hot-reloading for swift developement.
 
 ## Getting Started
