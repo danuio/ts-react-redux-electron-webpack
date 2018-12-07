@@ -11,10 +11,6 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const autoprefixer = require('autoprefixer');
 
-
-const gui = [];
-let memo = {};
-
 const resolveApp = relativePath => {
     return path.resolve(fs.realpathSync(process.cwd()), relativePath);
 };
@@ -29,30 +25,6 @@ const paths = {
     tsConfig: resolveApp('tsconfig.json'),
     tsLint: resolveApp('tslint.json'),
 };
-
-function getTSXFiles(initial) {
-    fs.readdirSync(initial)
-        .map((p) => {
-            const fullPath = path.join(initial, p);
-            if (fs.lstatSync(fullPath).isDirectory()) {
-                getTSXFiles(fullPath);
-            } else {
-                if (p.match(/.*\.tsx$/)) {
-                    gui.push(fullPath);
-                }
-            }
-        });
-}
-
-function mapTSXFiles(initial) {
-    getTSXFiles(initial);
-    memo = gui.reduce((obj, file) => {
-        obj[path.basename(file, path.extname(file))] = path.resolve(file);
-        return obj
-    }, {});
-}
-
-mapTSXFiles('src');
 
 const config = {
     devServer: {
