@@ -1,20 +1,24 @@
-import {combineReducers} from "redux";
+import { combineReducers } from 'redux';
+import { IBasicReducer } from '../common/reducers/BasicReducerFactory';
 
-import BasicReducerFactory, {BasicReducerState} from "../common/BasicReducer";
-import Template from "../actions/Template";
+import Accounts, { AccountsDecryptPayload } from '../actions/Template';
 
+export type AccountsDecryptReducer = IBasicReducer<
+	AccountsDecryptPayload,
+	string,
+	string
+>;
 
-export interface TemplateReducerState {
-    test: BasicReducerState<number, string>;
+export interface IAccountsReducer {
+	decrypt: AccountsDecryptReducer;
 }
 
-const template = new Template();
-const SimpleReducer = <T1, T2>(prefix: string, initial?: BasicReducerState<T1, T2>) => {
-    return BasicReducerFactory<Template, T1, T2>(template, prefix, initial);
-};
+const accounts = new Accounts();
 
-const TemplateReducer = combineReducers({
-    test: SimpleReducer<number, string>('TEST')
+const AccountsReducer = combineReducers({
+	decrypt: accounts.SimpleReducer<AccountsDecryptPayload, string, string>(
+		'Decrypt'
+	)
 });
 
-export default TemplateReducer;
+export default AccountsReducer;

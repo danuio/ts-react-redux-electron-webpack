@@ -1,31 +1,33 @@
 import * as React from 'react';
 
-import {withAlert} from "react-alert";
-import {connect} from "react-redux";
+import { withAlert } from 'react-alert';
+import { connect } from 'react-redux';
 
-import Index from "../pages/Index";
+import Index from '../pages/Index';
 
-import {DefaultProps, Store} from "../redux";
+import { DefaultProps, Store } from '../redux';
 
 import './styles/App.css';
 
-
 export interface AppLocalProps extends DefaultProps {
-    test?: string;
+	test?: string;
 }
 
 class App extends React.Component<AppLocalProps, any> {
-    public render() {
-        return (
-            <React.Fragment>
-                <Index/>
-            </React.Fragment>
-        );
-    }
+	public render() {
+		return (
+			<React.Fragment>
+				<Index />
+			</React.Fragment>
+		);
+	}
 }
 
 const mapStoreToProps = (store: Store) => ({});
 
 const mapsDispatchToProps = (dispatch: any) => ({});
 
-export default connect(mapStoreToProps, mapsDispatchToProps)(withAlert(App));
+export default connect(
+	mapStoreToProps,
+	mapsDispatchToProps
+)(withAlert(App));

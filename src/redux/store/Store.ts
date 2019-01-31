@@ -1,26 +1,37 @@
-import thunk from 'redux-thunk';
 import logger from 'redux-logger';
+import dynamicStorage from 'redux-persist/lib/storage';
+import createSagaMiddleware from 'redux-saga';
 
-import {InjectedAlertProp} from "react-alert";
-import {applyMiddleware, combineReducers, createStore} from "redux";
+import { PersistConfig, persistReducer, persistStore } from 'redux-persist';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 
-import TemplateReducer, {TemplateReducerState} from '../reducers/Template'
+import TemplateReducer, { AccountsDecryptReducer } from '../reducers/Template';
 
-export interface DefaultProps {
-    alert: InjectedAlertProp;
-
-    [key: string]: any;
-}
+import TemplateSagas from '../sagas/watchers/Template';
 
 export interface Store {
-    template: TemplateReducerState
+	template: AccountsDecryptReducer;
 }
 
+const persistConfig: PersistConfig = {
+	key: 'root',
+	storage: dynamicStorage,
+	whitelist: ['app']
+};
+
 const rootReducer = combineReducers({
-    template: TemplateReducer
+	template: TemplateReducer
 });
 
-const middleware = [thunk, logger];
-const store = createStore(rootReducer, applyMiddleware(...middleware));
+const saga = createSagaMiddleware();
+const middleware = [saga, logger];
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-export default store;
+export default () => {
+	const store = createStore(persistedReducer, applyMiddleware(...middleware));
+	const persistor = persistStore(store);
+
+	saga.run(TemplateSagas);
+
+	return { store, persistor };
+};

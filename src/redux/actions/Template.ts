@@ -1,21 +1,36 @@
-import {CustomThunkAction} from "../common/Handlers";
+import BaseActions, {
+	ActionCreatorHandlers,
+	ActionInterface,
+	ActionValue
+} from '../common/BaseActions';
 
-import Actions from "../common/Actions";
-
-class Template extends Actions {
-    constructor() {
-        super(Template.name);
-        this.prefixes = [
-            'TEST',
-        ];
-    }
-
-    public handleTest = (): CustomThunkAction<number, string, void> => (dispatch) => {
-        const {init, success, failure} = this.handlers<number, string>('TEST');
-        dispatch(init());
-        dispatch(success(123));
-        dispatch(failure('hello'));
-    };
+export interface AccountsDecryptPayload {
+	address: string;
+	password: string;
 }
 
-export default Template;
+interface HandlerSchema {
+	decrypt: ActionCreatorHandlers<AccountsDecryptPayload, string, string>;
+}
+
+interface ActionSchema extends ActionInterface {
+	decrypt: ActionValue;
+}
+
+export default class Accounts extends BaseActions<HandlerSchema, ActionSchema> {
+	public handlers: HandlerSchema;
+
+	constructor() {
+		super(Accounts.name);
+
+		this.prefixes = ['Transfer', 'Decrypt'];
+
+		this.handlers = {
+			decrypt: this.generateHandlers<
+				AccountsDecryptPayload,
+				string,
+				string
+			>('Decrypt')
+		};
+	}
+}
